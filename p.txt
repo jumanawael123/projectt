@@ -1,0 +1,61 @@
+import pandas as pd
+import os
+
+class Calculator:
+    def add(self, a, b):
+        return a + b
+
+    def subtract(self, a, b):
+        return a - b
+
+    def multiply(self, a, b):
+        return a * b
+
+    def divide(self, a, b):
+        if b == 0:
+            raise ValueError("Cannot divide by zero!")
+        return a / b
+
+    def read_data(self, file_path):
+        """Reads data from a CSV file."""
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"The file {file_path} does not exist.")
+        return pd.read_csv(file_path)
+
+    def generate_summary(self, df):
+        """Generates summary statistics of the DataFrame."""
+        return df.describe()
+
+    def handle_missing_values(self, df, strategy="mean"):
+        """Handles missing values in the DataFrame."""
+        if strategy == "mean":
+            return df.fillna(df.mean())
+        elif strategy == "median":
+            return df.fillna(df.median())
+        elif strategy == "mode":
+            return df.fillna(df.mode().iloc[0])
+        else:
+            raise ValueError("Unknown strategy")
+
+    def encode_categorical_data(self, df):
+        """Encodes categorical columns using one-hot encoding."""
+        return pd.get_dummies(df)
+
+# Example usage:
+if _name_ == "_main_":
+    calc = Calculator()
+    print("Addition:", calc.add(1, 2))
+    print("Subtraction:", calc.subtract(5, 3))
+    print("Multiplication:", calc.multiply(4, 7))
+    print("Division:", calc.divide(10, 2))
+
+    try:
+        df = calc.read_data("your_file.csv")
+        print("Summary:\n", calc.generate_summary(df))
+        df = calc.handle_missing_values(df)
+        df = calc.encode_categorical_data(df)
+        print("Data after encoding:\n", df.head())
+    except FileNotFoundError as e:
+        print(e)
+    except Exception as e:
+        print("An error occurred:", e)
